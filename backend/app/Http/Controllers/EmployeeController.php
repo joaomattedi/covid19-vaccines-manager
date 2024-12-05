@@ -31,15 +31,36 @@ class EmployeeController extends Controller
         return response()->json($employee, 201); 
     }
 
-    public function show(string $id)
+    public function show(string $identifier)
     {
-        $employee = Employee::with('vaccine')->findOrFail($id);
+        if (preg_match('/^\d{11}$/', $identifier)) {
+            $employee = Employee::where('cpf', $identifier)->firstOrFail();
+        } elseif (is_numeric($identifier)) {
+            $employee = Employee::find($identifier);
+        } else {
+            return response()->json(['message' => 'Use only ID or CPF to find employees'], 400);
+        }
+    
+        if (!$employee) {
+            return response()->json(['message' => "Employee not found $employee"], 404);
+        }
+
         return response()->json($employee);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $identifier)
     {
-        $employee = Employee::findOrFail($id);
+        if (preg_match('/^\d{11}$/', $identifier)) {
+            $employee = Employee::where('cpf', $identifier)->first();
+        } elseif (is_numeric($identifier)) {
+            $employee = Employee::find($identifier);
+        } else {
+            return response()->json(['message' => 'Invalid identifier provided'], 400);
+        }
+
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
 
         $validated = $request->validate([
             'cpf' => "required|string|unique:employees,cpf,{$employee->id}|max:11",
@@ -57,9 +78,20 @@ class EmployeeController extends Controller
         return response()->json($employee);
     }
 
-    public function destroy(string $id)
+    public function destroy(string $identifier)
     {
-        $employee = Employee::findOrFail($id);
+        if (preg_match('/^\d{11}$/', $identifier)) {
+            $employee = Employee::where('cpf', $identifier)->first();
+        } elseif (is_numeric($identifier)) {
+            $employee = Employee::find($identifier);
+        } else {
+            return response()->json(['message' => 'Invalid identifier provided'], 400);
+        }
+
+    // Se não encontrar o funcionário
+        if (!$employee) {
+            return response()->json(['message' => 'Employee not found'], 404);
+        }
         $employee->delete();
 
         return response()->json(['message' => 'Employee deleted successfully'], 200);
