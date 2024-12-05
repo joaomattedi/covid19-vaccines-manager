@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return response('welcome');
-});
+// Route::get('/', function () {
+//     return response('welcome');
+// });
 
-Route::get('/teste', function () {
-    return response('teste');
-});
+Route::apiResource('employees', EmployeeController::class);
