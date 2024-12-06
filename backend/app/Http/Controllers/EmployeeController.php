@@ -46,6 +46,8 @@ class EmployeeController extends Controller
             return response()->json(['message' => "Employee not found $employee"], 404);
         }
 
+        $employee->cpf = substr($employee->cpf, 0, 3) . '********';
+
         return response()->json($employee);
     }
 
