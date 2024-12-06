@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::with('vaccine')->paginate(10);
+        $perPage = $request->input('per_page',10);
+        $employees = Employee::with('vaccine')->paginate($perPage);
         return response()->json($employees);
     }
 
