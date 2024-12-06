@@ -97,4 +97,19 @@ class EmployeeController extends Controller
 
         return response()->json(['message' => 'Employee deleted successfully'], 200);
     }
+
+    public function generateEmployees(Request $request)
+    {
+        $validated = $request->validate([
+            'quantity' => 'nullable|integer|min:1',
+        ]);
+
+        $quantity = $validated['quantity'] ?? 1;
+
+        Employee::factory($quantity)->create();
+
+        return response()->json([
+            'message' => "{$quantity} employee(s) generated with success!"
+        ]);
+    }
 }

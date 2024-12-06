@@ -71,4 +71,19 @@ class VaccineController extends Controller
 
         return response()->json(['message' => 'Vaccine deleted successfully']);
     }
+
+    public function generateVaccines(Request $request)
+    {
+        $validated = $request->validate([
+            'quantity' => 'nullable|integer|min:1',
+        ]);
+
+        $quantity = $validated['quantity'] ?? 1;
+
+        Vaccine::factory($quantity)->create();
+
+        return response()->json([
+            'message' => "{$quantity} vaccine(s) generated with success!"
+        ]);
+    }
 }
