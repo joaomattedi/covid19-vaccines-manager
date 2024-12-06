@@ -35,7 +35,9 @@ class VaccineController extends Controller
 
         if (!$vaccine) {
             return response()->json(['message' => 'Vaccine not found'], 404);
-    }
+        }
+
+        return response()->json($vaccine);
     }
 
     public function update(Request $request, string $id)
