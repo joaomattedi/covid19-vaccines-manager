@@ -14,3 +14,8 @@ export async function createVaccine(vaccine: Vaccine): Promise<Vaccine> {
   const { data } = await api.post('/vaccines', vaccine);
   return data;
 }
+
+export async function deleteVaccine(vaccine: Vaccine) {
+  const { data } = await api.delete(`/vaccines/${vaccine.id}`);
+  return data;
+}

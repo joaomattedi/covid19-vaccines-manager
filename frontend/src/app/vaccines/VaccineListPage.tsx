@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getVaccines } from '@/services/vaccines.service';
-import { useRouter } from 'next/navigation';
+import { deleteVaccine, getVaccines } from '@/services/vaccines.service';
 import Modal from '@/components/Modal';
 import CreateVaccineForm from './new/CreateVaccineForm';
+import { FaTrashAlt } from 'react-icons/fa';
 
 export type Vaccine = {
   id?: number;
@@ -27,7 +27,8 @@ const VaccineListPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedVaccine, setSelectedVaccine] = useState<Vaccine | null>(null);
 
   const fetchVaccines = async (page: number) => {
     setLoading(true);
@@ -47,6 +48,22 @@ const VaccineListPage = () => {
   useEffect(() => {
     fetchVaccines(currentPage);
   }, [currentPage]);
+
+  const handleDeleteVaccine = async (vaccine: Vaccine) => {
+    try {
+      await deleteVaccine(vaccine);
+      fetchVaccines(currentPage);
+    } catch (error) {
+      console.error('Erro ao excluir vacina', error);
+    } finally {
+      setDeleteModalOpen(false);
+    }
+  };
+
+  const handleDeleteClick = (vaccine: Vaccine) => {
+    setSelectedVaccine(vaccine);
+    setDeleteModalOpen(true);
+  };
 
   const handleNextPage = () => {
     if (currentPage < lastPage) setCurrentPage((prev) => prev + 1);
@@ -87,6 +104,7 @@ const VaccineListPage = () => {
                 <th>Nome</th>
                 <th>Lote</th>
                 <th>Data de Validade</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -96,6 +114,12 @@ const VaccineListPage = () => {
                   <td>{vaccine.name}</td>
                   <td>{vaccine.batch}</td>
                   <td>{new Date(vaccine.expiration_date).toLocaleDateString()}</td>
+                  <td>
+                    <FaTrashAlt 
+                      color='#ef4444' 
+                      onClick={() => handleDeleteClick(vaccine)}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -124,6 +148,28 @@ const VaccineListPage = () => {
         <CreateVaccineForm onSuccess={() => {
           toggleModal();
         }} />
+      </Modal>
+
+      <Modal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-1/3">
+            <h3 className="text-xl mb-4">Tem certeza que deseja excluir?</h3>
+            <div className="flex justify-end">
+              <button
+                className="mr-4 text-gray-500"
+                onClick={() => setDeleteModalOpen(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                onClick={() => selectedVaccine?.id && handleDeleteVaccine(selectedVaccine)}
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
       </Modal>
     </div>
   );
