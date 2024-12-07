@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/services/api';
 import { getVaccines } from '@/services/vaccines.service';
+import { useRouter } from 'next/navigation';
 
 type Vaccine = {
   id: number;
@@ -24,6 +25,7 @@ const VaccineListPage = () => {
   const [lastPage, setLastPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const fetchVaccines = async (page: number) => {
     setLoading(true);
@@ -58,6 +60,21 @@ const VaccineListPage = () => {
   return (
     <div>
       <h1>Lista de Vacinas</h1>
+
+      <button
+        onClick={() => router.push('/vaccines/new')}
+        style={{
+          marginBottom: '20px',
+          padding: '10px 20px',
+          backgroundColor: '#007bff',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        Criar Nova Vacina
+      </button>
       <table>
         <thead>
           <tr>
