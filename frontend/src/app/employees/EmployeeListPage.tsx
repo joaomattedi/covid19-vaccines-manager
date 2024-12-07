@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { getEmployees } from '@/services/employees.service';
 import { useRouter } from 'next/navigation';
 import { Vaccine } from '../vaccines/VaccineListPage';
+import Modal from '@/components/Modal';
+import CreateEmployeeForm from './new/CreateEmployeeForm';
 
 export type Employee = {
   id?: number;
@@ -31,7 +33,10 @@ const EmployeeListPage = () => {
   const [lastPage, setLastPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const fetchEmployees = async (page: number) => {
     setLoading(true);
@@ -67,7 +72,7 @@ const EmployeeListPage = () => {
     <div>
       <h2>Lista de Funcionários</h2>
       <button
-        onClick={() => router.push('/employees/new')}
+        onClick={toggleModal}
         style={{
           marginBottom: '20px',
           padding: '10px 20px',
@@ -129,6 +134,12 @@ const EmployeeListPage = () => {
           Próxima Página
         </button>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={toggleModal}>
+        <CreateEmployeeForm onSuccess={() => {
+          toggleModal();
+        }} />
+      </Modal>
     </div>
   );
 };

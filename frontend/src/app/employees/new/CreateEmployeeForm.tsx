@@ -6,7 +6,11 @@ import { Vaccine } from '@/app/vaccines/VaccineListPage';
 import { Employee } from '../EmployeeListPage';
 import { createEmployee } from '@/services/employees.service';
 
-const CreateEmployeePage = () => {
+type Props = {
+  onSuccess: () => void;
+};
+
+const CreateEmployeeForm = ({ onSuccess }: Props) => {
   const [vaccines, setVaccines] = useState<Vaccine[]>([]);
   const [formData, setFormData] = useState<Employee>({
     cpf: '',
@@ -43,6 +47,7 @@ const CreateEmployeePage = () => {
     e.preventDefault();
     try {
       await createEmployee(formData);
+      onSuccess();
     } catch (error) {
       console.error('Erro ao criar funcionário. Verifique os dados e tente novamente.', error);
     }
@@ -147,4 +152,4 @@ const CreateEmployeePage = () => {
   );
 };
 
-export default CreateEmployeePage;
+export default CreateEmployeeForm;
