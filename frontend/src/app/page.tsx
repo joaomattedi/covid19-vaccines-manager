@@ -8,42 +8,29 @@ const HomePage = () => {
   const [activeTab, setActiveTab] = useState<'vacinas' | 'funcionarios'>('funcionarios');
 
   return (
-    <div>
-      <h1>Employee Vaccines Manager</h1>
+    <div className='h-full'>
+      <div className='flex pt-8 px-6 justify-between align-center border-b-2 border-emerald-600'>
+        <h1 className='font-bold text-3xl text-emerald-600'>GESTÃO DE FUNCIONÁRIOS VACINADOS</h1>
 
-      <nav style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-        <button
-          onClick={() => setActiveTab('funcionarios')}
-          style={{
-            padding: '10px',
-            backgroundColor: activeTab === 'funcionarios' ? '#007bff' : '#f0f0f0',
-            color: activeTab === 'funcionarios' ? '#fff' : '#000',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-          }}
-        >
-          Funcionários
-        </button>
-        <button
-          onClick={() => setActiveTab('vacinas')}
-          style={{
-            padding: '10px',
-            backgroundColor: activeTab === 'vacinas' ? '#007bff' : '#f0f0f0',
-            color: activeTab === 'vacinas' ? '#fff' : '#000',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-          }}
-        >
-          Vacinas
-        </button>
-      </nav>
-
-      <div>
+        <nav style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+          <button
+            onClick={() => setActiveTab('funcionarios')}
+            className={`${ activeTab === 'funcionarios' ? 'bg-emerald-600 text-white' : 'bg-transparent text-emerald-600 border border-emerald-600 '} px-4 py-2 rounded`}
+          >
+            Funcionários
+          </button>
+          <button
+            onClick={() => setActiveTab('vacinas')}
+            className={`${ activeTab === 'vacinas' ? 'bg-emerald-600 text-white' : 'bg-transparent text-emerald-600 border border-emerald-600 '} px-4 py-2 rounded`}
+          >
+            Vacinas
+          </button>
+        </nav>
+      </div>
+      <>
         {activeTab === 'vacinas' && <VaccineListPage />}
         {activeTab === 'funcionarios' && <EmployeeListPage />}
-      </div>
+      </>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { deleteVaccine, getVaccines } from '@/services/vaccines.service';
 import Modal from '@/components/Modal';
 import CreateVaccineForm from './new/CreateVaccineForm';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaChevronCircleLeft, FaChevronCircleRight, FaPlus, FaTrashAlt } from 'react-icons/fa';
 
 export type Vaccine = {
   id?: number;
@@ -78,70 +78,66 @@ const VaccineListPage = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h1>Lista de Vacinas</h1>
+    <div className='w-4/5 m-auto flex justify-between flex-wrap h-4/5 gap-10'>
+      <div className='flex justify-between items-center py-6 w-full'>
+        <h1 className='text-emerald-500 font-semibold text-2xl'>Lista de Vacinas</h1>
 
-      <button
-        onClick={toggleModal}
-        style={{
-          marginBottom: '20px',
-          padding: '10px 20px',
-          backgroundColor: '#007bff',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-      >
-        Criar Nova Vacina
-      </button>
-      {
-        loading ? <p>Carregando vacinas...</p>
-        : <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Lote</th>
-                <th>Data de Validade</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {vaccines.map((vaccine) => (
-                <tr key={vaccine.id}>
-                  <td>{vaccine.id}</td>
-                  <td>{vaccine.name}</td>
-                  <td>{vaccine.batch}</td>
-                  <td>{new Date(vaccine.expiration_date).toLocaleDateString()}</td>
-                  <td>
-                    <FaTrashAlt 
-                      color='#ef4444' 
-                      onClick={() => handleDeleteClick(vaccine)}
-                    />
-                  </td>
+        <button
+          onClick={toggleModal}
+          className='flex items-center gap-2 text-lg font-semibold text-emerald-500 hover:bg-emerald-500 hover:text-white hover:rounded px-4 py-2'
+        >
+          <FaPlus /> Criar Nova Vacina
+        </button>
+
+      </div>
+      <div className='flex-1'>
+        {
+          loading ? <div className='flex justify-center items-center text-2xl font-semibold text-emerald-500'>Carregando vacinas...</div>
+          : <table className='w-full text-emerald-700 h-full'>
+              <thead>
+                <tr className='mb-4'>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Lote</th>
+                  <th>Data de Validade</th>
+                  <th>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-      }
-      
+              </thead>
+              <tbody>
+                {vaccines.map((vaccine) => (
+                  <tr key={vaccine.id} className='hover:bg-emerald-50'>
+                    <td className='text-center'>{vaccine.id}</td>
+                    <td className='text-center'>{vaccine.name}</td>
+                    <td className='text-center'>{vaccine.batch}</td>
+                    <td className='text-center'>{new Date(vaccine.expiration_date).toLocaleDateString()}</td>
+                    <td className='flex justify-center gap-4'>
+                      <FaTrashAlt 
+                        color='#ef4444' 
+                        onClick={() => handleDeleteClick(vaccine)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+        }
+      </div>
 
-      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '10px' }}>
+      <div className='flex justify-center gap-4 w-full mt-6 items-center text-emerald-500'>
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          style={{ padding: '10px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+          className='flex items-center justify-center py-4 px-6'
         >
-          Página Anterior
+          <FaChevronCircleLeft size={24}/>
         </button>
-        <span>Página {currentPage} de {lastPage}</span>
+        <span className='text-lg font-semibold'>Página {currentPage} de {lastPage}</span>
         <button
           onClick={handleNextPage}
           disabled={currentPage === lastPage}
-          style={{ padding: '10px', cursor: currentPage === lastPage ? 'not-allowed' : 'pointer' }}
+          className='flex items-center justify-center py-4 px-6'
         >
-          Próxima Página
+          <FaChevronCircleRight size={24} />
         </button>
       </div>
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
