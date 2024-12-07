@@ -1,15 +1,20 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import api from '@/services/api';
 import { getEmployees } from '@/services/employees.service';
 import { useRouter } from 'next/navigation';
+import { Vaccine } from '../vaccines/VaccineListPage';
 
-type Employee = {
-  id: number;
+export type Employee = {
+  id?: number;
   cpf: string;
   full_name: string;
   birth_date: string;
+  date_first_dose: string;
+  date_second_dose: string;
+  date_third_dose: string;
+  comorbidity_carrier: boolean;
+  vaccine?: Vaccine;
 };
 
 export type PaginatedResponse = {
@@ -82,6 +87,11 @@ const EmployeeListPage = () => {
             <th>CPF</th>
             <th>Nome Completo</th>
             <th>Data de Nascimento</th>
+            <th>Data da primeira dose</th>
+            <th>Data da segunda dose</th>
+            <th>Data da terceira dose</th>
+            <th>Portador de comorbidades</th>
+            <th>Vacina aplicada</th>
           </tr>
         </thead>
         <tbody>
@@ -91,6 +101,11 @@ const EmployeeListPage = () => {
               <td>{employee.cpf}</td>
               <td>{employee.full_name}</td>
               <td>{new Date(employee.birth_date).toLocaleDateString()}</td>
+              <td>{new Date(employee.date_first_dose).toLocaleDateString()}</td>
+              <td>{new Date(employee.date_second_dose).toLocaleDateString()}</td>
+              <td>{new Date(employee.date_third_dose).toLocaleDateString()}</td>
+              <td>{employee.comorbidity_carrier ? 'Sim' : 'Não'}</td>
+              <td>{employee.vaccine?.name}</td>
             </tr>
           ))}
         </tbody>
