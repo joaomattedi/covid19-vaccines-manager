@@ -4,16 +4,19 @@ import api from '@/services/api';
 
 import { useState } from "react";
 import { Vaccine } from '../VaccineListPage';
+import { createVaccine, updateVaccine } from '@/services/vaccines.service';
 
 type Props = {
   onSuccess: () => void;
+  vaccine?: Vaccine;
 };
 
-const CreateVaccineForm = ({ onSuccess }: Props) => {
+const VaccineForm = ({ onSuccess, vaccine }: Props) => {
   const [formData, setFormData] = useState<Vaccine>({
-    name: "",
-    batch: "",
-    expiration_date: "",
+    id: vaccine?.id,
+    name: vaccine?.name || '',
+    batch: vaccine?.batch || '',
+    expiration_date: vaccine?.expiration_date || '',
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -28,19 +31,18 @@ const CreateVaccineForm = ({ onSuccess }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(false);
-
     try {
-      const response = await api.post("/vaccines", formData);
-      if (response.status === 201) {
-        setSuccess(true);
-        setFormData({ name: "", batch: "", expiration_date: "" });
+      if (!!vaccine?.id) {
+        await updateVaccine(formData);
+      } else {        
+        await createVaccine(formData);
       }
       onSuccess();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Erro ao cadastrar a vacina.");
+    } catch (error) {
+      console.error('Erro ao criar vacina. Verifique os dados e tente novamente.', error);
     }
+    setError(null);
+    setSuccess(false);
   };
 
   return (
@@ -92,4 +94,4 @@ const CreateVaccineForm = ({ onSuccess }: Props) => {
   );
 };
 
-export default CreateVaccineForm;
+export default VaccineForm;

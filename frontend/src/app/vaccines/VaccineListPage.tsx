@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { deleteVaccine, getVaccines } from '@/services/vaccines.service';
 import Modal from '@/components/Modal';
-import CreateVaccineForm from './new/CreateVaccineForm';
-import { FaChevronCircleLeft, FaChevronCircleRight, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import VaccineForm from './new/VaccineForm';
+import { FaChevronCircleLeft, FaChevronCircleRight, FaEdit, FaPlus, FaTrashAlt } from 'react-icons/fa';
 
 export type Vaccine = {
   id?: number;
@@ -28,6 +28,7 @@ const VaccineListPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedVaccine, setSelectedVaccine] = useState<Vaccine | null>(null);
 
   const fetchVaccines = async (page: number) => {
@@ -75,6 +76,11 @@ const VaccineListPage = () => {
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
+  const handleUpdateClick = (vaccine: Vaccine) => {
+    setSelectedVaccine(vaccine);
+    setUpdateModalOpen(true);
+  };
+
   if (error) return <p>{error}</p>;
 
   return (
@@ -110,7 +116,11 @@ const VaccineListPage = () => {
                     <td className='text-center'>{vaccine.name}</td>
                     <td className='text-center'>{vaccine.batch}</td>
                     <td className='text-center'>{new Date(vaccine.expiration_date).toLocaleDateString()}</td>
-                    <td className='flex justify-center gap-4'>
+                    <td className='flex justify-center items-center h-full gap-4'>
+                      <FaEdit 
+                        color='#059669'
+                        onClick={() => handleUpdateClick(vaccine)}
+                      />
                       <FaTrashAlt 
                         color='#ef4444' 
                         onClick={() => handleDeleteClick(vaccine)}
@@ -141,8 +151,16 @@ const VaccineListPage = () => {
         </button>
       </div>
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
-        <CreateVaccineForm onSuccess={() => {
+        <VaccineForm onSuccess={async () => {
           toggleModal();
+          await fetchVaccines(currentPage);
+        }} />
+      </Modal>
+
+      <Modal isOpen={updateModalOpen} onClose={() => setUpdateModalOpen(false)}>
+        <VaccineForm vaccine={selectedVaccine!} onSuccess={async () => {
+          setUpdateModalOpen(false);
+          await fetchVaccines(currentPage);
         }} />
       </Modal>
 

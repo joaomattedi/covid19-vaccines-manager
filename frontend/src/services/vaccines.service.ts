@@ -19,3 +19,8 @@ export async function deleteVaccine(vaccine: Vaccine) {
   const { data } = await api.delete(`/vaccines/${vaccine.id}`);
   return data;
 }
+
+export async function updateVaccine(vaccine: Vaccine) {
+  const { data } = await api.put(`/vaccines/${vaccine.id}`, vaccine);
+  return data;
+}
