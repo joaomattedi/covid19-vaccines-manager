@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/services/api';
 import { getEmployees } from '@/services/employees.service';
+import { useRouter } from 'next/navigation';
 
 type Employee = {
   id: number;
@@ -24,6 +25,7 @@ const EmployeeListPage = () => {
   const [lastPage, setLastPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const fetchEmployees = async (page: number) => {
     setLoading(true);
@@ -58,6 +60,21 @@ const EmployeeListPage = () => {
   return (
     <div>
       <h2>Lista de Funcionários</h2>
+      <button
+        onClick={() => router.push('/employees/new')}
+        style={{
+          marginBottom: '20px',
+          padding: '10px 20px',
+          backgroundColor: '#007bff',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+        }}
+      >
+        Criar Novo Funcionário
+      </button>
+
       <table>
         <thead>
           <tr>
