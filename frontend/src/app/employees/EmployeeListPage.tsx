@@ -10,9 +10,9 @@ export type Employee = {
   cpf: string;
   full_name: string;
   birth_date: string;
-  date_first_dose: string;
-  date_second_dose: string;
-  date_third_dose: string;
+  date_first_dose?: string;
+  date_second_dose?: string;
+  date_third_dose?: string;
   comorbidity_carrier: boolean;
   vaccine?: Vaccine;
 };
@@ -101,9 +101,9 @@ const EmployeeListPage = () => {
               <td>{employee.cpf}</td>
               <td>{employee.full_name}</td>
               <td>{new Date(employee.birth_date).toLocaleDateString()}</td>
-              <td>{new Date(employee.date_first_dose).toLocaleDateString()}</td>
-              <td>{new Date(employee.date_second_dose).toLocaleDateString()}</td>
-              <td>{new Date(employee.date_third_dose).toLocaleDateString()}</td>
+              <td>{employee.date_first_dose && new Date(employee.date_first_dose).toLocaleDateString()}</td>
+              <td>{employee.date_second_dose && new Date(employee.date_second_dose).toLocaleDateString()}</td>
+              <td>{employee.date_third_dose && new Date(employee.date_third_dose).toLocaleDateString()}</td>
               <td>{employee.comorbidity_carrier ? 'Sim' : 'Não'}</td>
               <td>{employee.vaccine?.name}</td>
             </tr>
