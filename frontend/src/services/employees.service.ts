@@ -13,3 +13,8 @@ export async function createEmployee(employee: Employee): Promise<Employee> {
   const { data } = await api.post('/employees', employee);
   return data;
 }
+
+export async function deleteEmployee(employee: Employee) {
+  const { data } = await api.delete(`/employees/${employee.id}`);
+  return data;
+}

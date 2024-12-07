@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getEmployees } from '@/services/employees.service';
-import { useRouter } from 'next/navigation';
+import { deleteEmployee, getEmployees } from '@/services/employees.service';
 import { Vaccine } from '../vaccines/VaccineListPage';
 import Modal from '@/components/Modal';
 import CreateEmployeeForm from './new/CreateEmployeeForm';
+import { FaTrashAlt } from 'react-icons/fa';
+import EmployeeInfo from '@/components/EmployeeInfo';
 
 export type Employee = {
   id?: number;
@@ -34,7 +35,8 @@ const EmployeeListPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
@@ -63,6 +65,23 @@ const EmployeeListPage = () => {
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleDeleteEmployee = async (employee: Employee) => {
+    try {
+      await deleteEmployee(employee);;
+      fetchEmployees(currentPage);
+    } catch (error) {
+      console.error('Erro ao excluir funcionário', error);
+    } finally {
+      setSelectedEmployee(null);
+      setDeleteModalOpen(false);
+    }
+  };
+
+  const handleDeleteClick = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setDeleteModalOpen(true);
   };
 
   if (error) return <p>{error}</p>;
@@ -98,6 +117,7 @@ const EmployeeListPage = () => {
                 <th>Data da terceira dose</th>
                 <th>Portador de comorbidades</th>
                 <th>Vacina aplicada</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -112,6 +132,12 @@ const EmployeeListPage = () => {
                   <td>{employee.date_third_dose && new Date(employee.date_third_dose).toLocaleDateString()}</td>
                   <td>{employee.comorbidity_carrier ? 'Sim' : 'Não'}</td>
                   <td>{employee.vaccine?.name}</td>
+                  <td>
+                    <FaTrashAlt 
+                      color='#ef4444' 
+                      onClick={() => handleDeleteClick(employee)}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -140,6 +166,29 @@ const EmployeeListPage = () => {
         <CreateEmployeeForm onSuccess={() => {
           toggleModal();
         }} />
+      </Modal>
+
+      <Modal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-1/3">
+            <h3 className="text-xl mb-4">Tem certeza que deseja excluir?</h3>
+            <EmployeeInfo employee={selectedEmployee!}/>
+            <div className="flex justify-end">
+              <button
+                className="mr-4 text-gray-500"
+                onClick={() => setDeleteModalOpen(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                onClick={() => selectedEmployee?.id && handleDeleteEmployee(selectedEmployee)}
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+        </div>
       </Modal>
     </div>
   );
