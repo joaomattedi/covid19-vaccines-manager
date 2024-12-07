@@ -58,7 +58,6 @@ const VaccineListPage = () => {
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-  if (loading) return <p>Carregando vacinas...</p>;
   if (error) return <p>{error}</p>;
 
   return (
@@ -79,26 +78,30 @@ const VaccineListPage = () => {
       >
         Criar Nova Vacina
       </button>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Lote</th>
-            <th>Data de Validade</th>
-          </tr>
-        </thead>
-        <tbody>
-          {vaccines.map((vaccine) => (
-            <tr key={vaccine.id}>
-              <td>{vaccine.id}</td>
-              <td>{vaccine.name}</td>
-              <td>{vaccine.batch}</td>
-              <td>{new Date(vaccine.expiration_date).toLocaleDateString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {
+        loading ? <p>Carregando vacinas...</p>
+        : <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Lote</th>
+                <th>Data de Validade</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vaccines.map((vaccine) => (
+                <tr key={vaccine.id}>
+                  <td>{vaccine.id}</td>
+                  <td>{vaccine.name}</td>
+                  <td>{vaccine.batch}</td>
+                  <td>{new Date(vaccine.expiration_date).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+      }
+      
 
       <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '10px' }}>
         <button
