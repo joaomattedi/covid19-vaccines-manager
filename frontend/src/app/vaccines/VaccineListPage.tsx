@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import api from '@/services/api';
+import { getVaccines } from '@/services/vaccines.service';
 
 type Vaccine = {
   id: number;
@@ -10,7 +11,7 @@ type Vaccine = {
   expiration_date: string;
 };
 
-type PaginatedResponse = {
+export type PaginatedResponse = {
   data: Vaccine[];
   current_page: number;
   last_page: number;
@@ -28,12 +29,10 @@ const VaccineListPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get<PaginatedResponse>('/vaccines', {
-        params: { page },
-      });
-      setVaccines(response.data.data);
-      setCurrentPage(response.data.current_page);
-      setLastPage(response.data.last_page);
+      const response = await getVaccines(page);
+      setVaccines(response.data);
+      setCurrentPage(response.current_page);
+      setLastPage(response.last_page);
     } catch (err) {
       setError('Erro ao carregar as vacinas. Tente novamente mais tarde.');
     } finally {
