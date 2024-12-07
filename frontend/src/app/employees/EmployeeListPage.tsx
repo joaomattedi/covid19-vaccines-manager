@@ -10,11 +10,12 @@ export type Employee = {
   cpf: string;
   full_name: string;
   birth_date: string;
-  date_first_dose?: string;
-  date_second_dose?: string;
-  date_third_dose?: string;
+  date_first_dose: string | null;
+  date_second_dose: string | null;
+  date_third_dose: string | null;
   comorbidity_carrier: boolean;
   vaccine?: Vaccine;
+  vaccine_id: string | null;
 };
 
 export type PaginatedResponse = {
