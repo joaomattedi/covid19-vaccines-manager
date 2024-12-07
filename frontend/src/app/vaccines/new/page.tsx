@@ -3,9 +3,10 @@
 import api from '@/services/api';
 
 import { useState } from "react";
+import { Vaccine } from '../VaccineListPage';
 
 const NewVaccine = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Vaccine>({
     name: "",
     batch: "",
     expiration_date: "",
@@ -58,7 +59,6 @@ const NewVaccine = () => {
         <div style={{ marginBottom: "10px" }}>
           <label htmlFor="batch">Lote</label>
           <input
-            type="number"
             id="batch"
             name="batch"
             value={formData.batch}

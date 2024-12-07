@@ -1,16 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import api from '@/services/api';
 import { getVaccines } from '@/services/vaccines.service';
 import { useRouter } from 'next/navigation';
 
-type Vaccine = {
-  id: number;
+export type Vaccine = {
+  id?: number;
   name: string;
-  batch: number;
+  batch: string;
   expiration_date: string;
-};
+}
 
 export type PaginatedResponse = {
   data: Vaccine[];
