@@ -5,7 +5,7 @@ import { deleteEmployee, getEmployees } from '@/services/employees.service';
 import { Vaccine } from '../vaccines/VaccineListPage';
 import Modal from '@/components/Modal';
 import EmployeeForm from './new/EmployeeForm';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaChevronCircleLeft, FaChevronCircleRight, FaEdit, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import EmployeeInfo from '@/components/EmployeeInfo';
 
 export type Employee = {
@@ -93,88 +93,87 @@ const EmployeeListPage = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <h2>Lista de Funcionários</h2>
-      <button
-        onClick={toggleModal}
-        style={{
-          marginBottom: '20px',
-          padding: '10px 20px',
-          backgroundColor: '#007bff',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-        }}
-      >
-        Criar Novo Funcionário
-      </button>
-      {
-        loading ? <p>Carregando vacinas...</p>
-        : <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>CPF</th>
-                <th>Nome Completo</th>
-                <th>Data de Nascimento</th>
-                <th>Data da primeira dose</th>
-                <th>Data da segunda dose</th>
-                <th>Data da terceira dose</th>
-                <th>Portador de comorbidades</th>
-                <th>Vacina aplicada</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.map((employee) => (
-                <tr key={employee.id}>
-                  <td>{employee.id}</td>
-                  <td>{employee.cpf}</td>
-                  <td>{employee.full_name}</td>
-                  <td>{new Date(employee.birth_date).toLocaleDateString()}</td>
-                  <td>{employee.date_first_dose && new Date(employee.date_first_dose).toLocaleDateString()}</td>
-                  <td>{employee.date_second_dose && new Date(employee.date_second_dose).toLocaleDateString()}</td>
-                  <td>{employee.date_third_dose && new Date(employee.date_third_dose).toLocaleDateString()}</td>
-                  <td>{employee.comorbidity_carrier ? 'Sim' : 'Não'}</td>
-                  <td>{employee.vaccine?.name}</td>
-                  <td>
-                    <FaEdit 
-                      color='#059669'
-                      onClick={() => handleUpdateClick(employee)}
-                    />
-                    <FaTrashAlt 
-                      color='#ef4444' 
-                      onClick={() => handleDeleteClick(employee)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-      }
+    <div className='w-4/5 m-auto flex justify-between flex-wrap h-4/5 gap-10'>
+      <div className='flex justify-between items-center py-6 w-full'>
+        <h1 className='text-emerald-500 font-semibold text-2xl'>Lista de Funcionários</h1>
 
-      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        <button
+          onClick={toggleModal}
+          className='flex items-center gap-2 text-lg font-semibold text-emerald-500 hover:bg-emerald-500 hover:text-white hover:rounded px-4 py-2'
+        >
+          <FaPlus /> Criar Novo Funcionário
+        </button>
+
+      </div>
+      <div className='flex-1'>
+        {
+          loading ? <div className='flex justify-center items-center text-2xl font-semibold text-emerald-500'>Carregando vacinas...</div>
+          : <table className='w-full text-emerald-700 h-full'>
+              <thead>
+                <tr className='mb-4'>
+                  <th>ID</th>
+                  <th>CPF</th>
+                  <th>Nome Completo</th>
+                  <th>Data de Nascimento</th>
+                  <th>Data da primeira dose</th>
+                  <th>Data da segunda dose</th>
+                  <th>Data da terceira dose</th>
+                  <th>Portador de comorbidades</th>
+                  <th>Vacina aplicada</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {employees.map((employee) => (
+                  <tr key={employee.id} className='hover:bg-emerald-50'>
+                    <td className='text-center'>{employee.id}</td>
+                    <td className='text-center'>{employee.cpf}</td>
+                    <td className='text-center'>{employee.full_name}</td>
+                    <td className='text-center'>{new Date(employee.birth_date).toLocaleDateString()}</td>
+                    <td className='text-center'>{employee.date_first_dose && new Date(employee.date_first_dose).toLocaleDateString()}</td>
+                    <td className='text-center'>{employee.date_second_dose && new Date(employee.date_second_dose).toLocaleDateString()}</td>
+                    <td className='text-center'>{employee.date_third_dose && new Date(employee.date_third_dose).toLocaleDateString()}</td>
+                    <td className='text-center'>{employee.comorbidity_carrier ? 'Sim' : 'Não'}</td>
+                    <td className='text-center'>{employee.vaccine?.name}</td>
+                    <td className='flex justify-center items-center h-full gap-4'>
+                      <FaEdit 
+                        color='#059669'
+                        onClick={() => handleUpdateClick(employee)}
+                      />
+                      <FaTrashAlt 
+                        color='#ef4444' 
+                        onClick={() => handleDeleteClick(employee)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+        }
+      </div>
+
+      <div className='flex justify-center gap-4 w-full mt-6 items-center text-emerald-500'>
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          style={{ padding: '10px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+          className='flex items-center justify-center py-4 px-6'
         >
-          Página Anterior
+          <FaChevronCircleLeft size={24}/>
         </button>
-        <span>Página {currentPage} de {lastPage}</span>
+        <span className='text-lg font-semibold'>Página {currentPage} de {lastPage}</span>
         <button
           onClick={handleNextPage}
           disabled={currentPage === lastPage}
-          style={{ padding: '10px', cursor: currentPage === lastPage ? 'not-allowed' : 'pointer' }}
+          className='flex items-center justify-center py-4 px-6'
         >
-          Próxima Página
+          <FaChevronCircleRight size={24} />
         </button>
       </div>
 
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
-        <EmployeeForm onSuccess={() => {
+        <EmployeeForm onSuccess={async () => {
           toggleModal();
+          await fetchEmployees(currentPage);
         }} />
       </Modal>
 
@@ -202,8 +201,9 @@ const EmployeeListPage = () => {
       </Modal>
 
       <Modal isOpen={updateModalOpen} onClose={() => setUpdateModalOpen(false)}>
-        <EmployeeForm employee={selectedEmployee!} onSuccess={() => {
+        <EmployeeForm employee={selectedEmployee!} onSuccess={async () => {
           toggleModal();
+          await fetchEmployees(currentPage);
         }} />
       </Modal>
     </div>
