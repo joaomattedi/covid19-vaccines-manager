@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import api from '@/services/api';
+import { getEmployees } from '@/services/employees.service';
 
 type Employee = {
   id: number;
@@ -10,7 +11,7 @@ type Employee = {
   birth_date: string;
 };
 
-type PaginatedResponse = {
+export type PaginatedResponse = {
   data: Employee[];
   current_page: number;
   last_page: number;
@@ -28,12 +29,10 @@ const EmployeeListPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.get<PaginatedResponse>('/employees', {
-        params: { page },
-      });
-      setEmployees(response.data.data);
-      setCurrentPage(response.data.current_page);
-      setLastPage(response.data.last_page);
+      const response = await getEmployees(page)
+      setEmployees(response.data);
+      setCurrentPage(response.current_page);
+      setLastPage(response.last_page);
     } catch (err) {
       setError('Erro ao carregar os funcionários. Tente novamente mais tarde.');
     } finally {
