@@ -5,7 +5,7 @@ import VaccineListPage from './vaccines/VaccineListPage';
 import EmployeeListPage from './employees/EmployeeListPage';
 
 const HomePage = () => {
-  const [activeTab, setActiveTab] = useState<'vacinas' | 'funcionarios'>('vacinas');
+  const [activeTab, setActiveTab] = useState<'vacinas' | 'funcionarios'>('funcionarios');
 
   return (
     <div>
