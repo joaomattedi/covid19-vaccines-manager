@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { getVaccines } from '@/services/vaccines.service';
 import { useRouter } from 'next/navigation';
+import Modal from '@/components/Modal';
+import CreateVaccineForm from './new/CreateVaccineForm';
 
 export type Vaccine = {
   id?: number;
@@ -24,6 +26,7 @@ const VaccineListPage = () => {
   const [lastPage, setLastPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   const fetchVaccines = async (page: number) => {
@@ -53,6 +56,8 @@ const VaccineListPage = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
+
   if (loading) return <p>Carregando vacinas...</p>;
   if (error) return <p>{error}</p>;
 
@@ -61,7 +66,7 @@ const VaccineListPage = () => {
       <h1>Lista de Vacinas</h1>
 
       <button
-        onClick={() => router.push('/vaccines/new')}
+        onClick={toggleModal}
         style={{
           marginBottom: '20px',
           padding: '10px 20px',
@@ -112,6 +117,11 @@ const VaccineListPage = () => {
           Próxima Página
         </button>
       </div>
+      <Modal isOpen={isModalOpen} onClose={toggleModal}>
+        <CreateVaccineForm onSuccess={() => {
+          toggleModal();
+        }} />
+      </Modal>
     </div>
   );
 };

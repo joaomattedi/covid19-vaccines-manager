@@ -5,7 +5,11 @@ import api from '@/services/api';
 import { useState } from "react";
 import { Vaccine } from '../VaccineListPage';
 
-const NewVaccine = () => {
+type Props = {
+  onSuccess: () => void;
+};
+
+const CreateVaccineForm = ({ onSuccess }: Props) => {
   const [formData, setFormData] = useState<Vaccine>({
     name: "",
     batch: "",
@@ -33,6 +37,7 @@ const NewVaccine = () => {
         setSuccess(true);
         setFormData({ name: "", batch: "", expiration_date: "" });
       }
+      onSuccess();
     } catch (err: any) {
       setError(err.response?.data?.message || "Erro ao cadastrar a vacina.");
     }
@@ -87,4 +92,4 @@ const NewVaccine = () => {
   );
 };
 
-export default NewVaccine;
+export default CreateVaccineForm;
