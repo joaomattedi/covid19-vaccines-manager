@@ -4,29 +4,31 @@ import React, { useEffect, useState } from 'react';
 import api from '@/services/api';
 import { Vaccine } from '@/app/vaccines/VaccineListPage';
 import { Employee } from '../EmployeeListPage';
-import { createEmployee } from '@/services/employees.service';
+import { createEmployee, updateEmployee } from '@/services/employees.service';
 
 type Props = {
   onSuccess: () => void;
+  employee?: Employee;
 };
 
-const CreateEmployeeForm = ({ onSuccess }: Props) => {
+const EmployeeForm = ({ onSuccess, employee }: Props) => {
   const [vaccines, setVaccines] = useState<Vaccine[]>([]);
   const [formData, setFormData] = useState<Employee>({
-    cpf: '',
-    full_name: '',
-    birth_date: '',
-    date_first_dose: '',
-    date_second_dose: '',
-    date_third_dose: '',
-    comorbidity_carrier: false,
-    vaccine_id: '',
+    id: employee?.id,
+    cpf: employee?.cpf || '',
+    full_name: employee?.full_name || '',
+    birth_date: employee?.birth_date || '',
+    date_first_dose: employee?.date_first_dose || '',
+    date_second_dose: employee?.date_second_dose || '',
+    date_third_dose: employee?.date_third_dose || '',
+    comorbidity_carrier: employee?.comorbidity_carrier || false,
+    vaccine_id: employee?.vaccine_id || '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement> ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value,
     });
   };
 
@@ -46,7 +48,13 @@ const CreateEmployeeForm = ({ onSuccess }: Props) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createEmployee(formData);
+      if (!!employee?.id) {
+        await updateEmployee(formData);
+      } else {
+        console.log(formData);
+        
+        await createEmployee(formData);
+      }
       onSuccess();
     } catch (error) {
       console.error('Erro ao criar funcionário. Verifique os dados e tente novamente.', error);
@@ -152,4 +160,4 @@ const CreateEmployeeForm = ({ onSuccess }: Props) => {
   );
 };
 
-export default CreateEmployeeForm;
+export default EmployeeForm;

@@ -18,3 +18,8 @@ export async function deleteEmployee(employee: Employee) {
   const { data } = await api.delete(`/employees/${employee.id}`);
   return data;
 }
+
+export async function updateEmployee(employee: Employee): Promise<Employee> {
+  const { data } = await api.put(`/employees/${employee.id}`, employee);
+  return data;
+}

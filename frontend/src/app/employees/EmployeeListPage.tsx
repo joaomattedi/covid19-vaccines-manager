@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { deleteEmployee, getEmployees } from '@/services/employees.service';
 import { Vaccine } from '../vaccines/VaccineListPage';
 import Modal from '@/components/Modal';
-import CreateEmployeeForm from './new/CreateEmployeeForm';
-import { FaTrashAlt } from 'react-icons/fa';
+import EmployeeForm from './new/EmployeeForm';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import EmployeeInfo from '@/components/EmployeeInfo';
 
 export type Employee = {
@@ -36,6 +36,7 @@ const EmployeeListPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   
   const toggleModal = () => setIsModalOpen(!isModalOpen);
@@ -82,6 +83,11 @@ const EmployeeListPage = () => {
   const handleDeleteClick = (employee: Employee) => {
     setSelectedEmployee(employee);
     setDeleteModalOpen(true);
+  };
+
+  const handleUpdateClick = (employee: Employee) => {
+    setSelectedEmployee(employee);
+    setUpdateModalOpen(true);
   };
 
   if (error) return <p>{error}</p>;
@@ -133,6 +139,10 @@ const EmployeeListPage = () => {
                   <td>{employee.comorbidity_carrier ? 'Sim' : 'Não'}</td>
                   <td>{employee.vaccine?.name}</td>
                   <td>
+                    <FaEdit 
+                      color='#059669'
+                      onClick={() => handleUpdateClick(employee)}
+                    />
                     <FaTrashAlt 
                       color='#ef4444' 
                       onClick={() => handleDeleteClick(employee)}
@@ -163,7 +173,7 @@ const EmployeeListPage = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={toggleModal}>
-        <CreateEmployeeForm onSuccess={() => {
+        <EmployeeForm onSuccess={() => {
           toggleModal();
         }} />
       </Modal>
@@ -189,6 +199,12 @@ const EmployeeListPage = () => {
             </div>
           </div>
         </div>
+      </Modal>
+
+      <Modal isOpen={updateModalOpen} onClose={() => setUpdateModalOpen(false)}>
+        <EmployeeForm employee={selectedEmployee!} onSuccess={() => {
+          toggleModal();
+        }} />
       </Modal>
     </div>
   );
