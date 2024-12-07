@@ -1,4 +1,4 @@
-import { PaginatedResponse } from "@/app/employees/EmployeeListPage";
+import { Employee, PaginatedResponse } from "@/app/employees/EmployeeListPage";
 import api from "./api";
 
 export async function getEmployees(page: number) {
@@ -6,5 +6,10 @@ export async function getEmployees(page: number) {
     params: { page },
   });
 
+  return data;
+}
+
+export async function createEmployee(employee: Employee): Promise<Employee> {
+  const { data } = await api.post('/employees', employee);
   return data;
 }
