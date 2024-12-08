@@ -19,7 +19,7 @@ class EmployeeController extends Controller
         }
     
         if (!empty($filters['fullName'])) {
-            $query->where('full_name', 'like', '%' . $filters['fullName'] . '%');
+            $query->whereRaw('LOWER(fullName) LIKE ?', ['%' . strtolower($filters['fullName']) . '%']);
         }
 
         $employees = $query->paginate($perPage);
