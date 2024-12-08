@@ -253,7 +253,7 @@ const EmployeeListPage = () => {
 
       <Modal isOpen={updateModalOpen} onClose={() => setUpdateModalOpen(false)}>
         <EmployeeForm employee={selectedEmployee!} onSuccess={async () => {
-          toggleModal();
+          setUpdateModalOpen(false);
           await fetchEmployees(currentPage);
         }} />
       </Modal>
