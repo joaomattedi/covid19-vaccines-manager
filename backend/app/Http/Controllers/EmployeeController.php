@@ -22,6 +22,8 @@ class EmployeeController extends Controller
             $query->whereRaw('LOWER(fullName) LIKE ?', ['%' . strtolower($filters['fullName']) . '%']);
         }
 
+        $query->orderBy('id', 'desc');
+
         $employees = $query->paginate($perPage);
         return response()->json($employees);
     }
