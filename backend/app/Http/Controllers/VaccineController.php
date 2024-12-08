@@ -11,7 +11,21 @@ class VaccineController extends Controller
     {
         $perPage = $request->input('per_page', 10);
 
-        $vaccines = Vaccine::paginate($perPage);
+        $filters = $request->only(['name', 'batch']);
+
+        $query = Vaccine::query();
+
+        if (!empty($filters['name'])) {
+            $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($filters['name']) . '%']);
+        }
+    
+        if (!empty($filters['batch'])) {
+            $query->where('batch', 'like', '%' . $filters['batch'] . '%');
+        }
+
+        $query->orderBy('id', 'desc');
+
+        $vaccines = $query->paginate($perPage);
         
         return response()->json($vaccines);
     }
