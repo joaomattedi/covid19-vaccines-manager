@@ -4,13 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
         $perPage = $request->input('per_page',10);
-        $employees = Employee::with('vaccine')->paginate($perPage);
+
+        $filters = $request->only(['cpf', 'fullName']);
+        $query = Employee::with('vaccine');
+
+        if (!empty($filters['cpf'])) {
+            $query->where('cpf', 'like', '%' . $filters['cpf'] . '%');
+        }
+    
+        if (!empty($filters['fullName'])) {
+            $query->where('full_name', 'like', '%' . $filters['fullName'] . '%');
+        }
+
+        Log::info($filters);
+
+        $employees = $query->paginate($perPage);
         return response()->json($employees);
     }
 
