@@ -103,46 +103,57 @@ const EmployeeListPage = () => {
       ...filters,
       [e.target.name]: e.target.value,
     });
-    setCurrentPage(1);
   };
-
+  
   const handleSearchClick = () => {
-    fetchEmployees(currentPage);
+    setCurrentPage(1);
+    fetchEmployees(1);
   }
 
   if (error) return <p>{error}</p>;
 
   return (
-    <div className='w-4/5 m-auto flex justify-between flex-wrap h-4/5 gap-10'>
-      <div className='flex justify-between items-center py-6 w-full'>
-        <h1 className='text-emerald-500 font-semibold text-2xl'>Lista de Funcionários</h1>
+    <div className='w-4/5 m-auto flex justify-center flex-wrap gap-10'>
+      <div className='flex flex-wrap justify-between items-center w-full border-b-2 mt-4 pb-2 border-emerald-600'>
+        <h1 className='text-emerald-600 font-semibold text-2xl w-full pb-2'>Lista de Funcionários</h1>
 
-        <div>
-        <input
-          type="text"
-          name="cpf"
-          id="cpf" 
-          placeholder='Busque por CPF...'
-          value={filters.cpf}
-          onChange={handleFilterChange}
-        />
-        <input
-          type="text"
-          name="fullName"
-          id="fullName" 
-          placeholder='Busque por nome...'
-          value={filters.fullName}
-          onChange={handleFilterChange}
-        />
-        <FaSearch onClick={handleSearchClick}/>
+        <div className='flex justify-start items-end py-2 rounded gap-2 text-emerald-600'>
+          <div className='flex flex-wrap items-center'>
+            <label className='w-full' htmlFor="cpf">CPF</label>
+            <input
+              type="text"
+              name="cpf"
+              id="cpf" 
+              placeholder='Busque por CPF...'
+              value={filters.cpf}
+              onChange={handleFilterChange}
+              className='border-b-2 py-2 border-emerald-600 px-2'
+            />
+          </div>
+          <div className='flex flex-wrap'>
+            <label htmlFor="fullName" className='w-full'>Nome</label>
+            <input
+              type="text"
+              name="fullName"
+              id="fullName" 
+              placeholder='Busque por nome...'
+              value={filters.fullName}
+              onChange={handleFilterChange}
+              className='border-b-2 py-2 border-emerald-600 px-2'
+            />
+          </div>
         </div>
 
+        <div className='cursor-pointer flex items-center gap-2 border-2 border-emerald-600 text-emerald-600 px-4 py-2 rounded' onClick={handleSearchClick}>
+          <FaSearch/> Buscar
+        </div>
         <button
           onClick={toggleModal}
-          className='flex items-center gap-2 text-lg font-semibold text-emerald-500 hover:bg-emerald-500 hover:text-white hover:rounded px-4 py-2'
+          className='flex items-center gap-2 text-lg font-semibold bg-emerald-600 text-white rounded px-4 py-2'
         >
           <FaPlus /> Criar Novo Funcionário
         </button>
+
 
       </div>
       <div className='flex-1'>
