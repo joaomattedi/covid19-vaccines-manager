@@ -46,13 +46,13 @@ const VaccineForm = ({ onSuccess, vaccine }: Props) => {
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px" }}>
-      <h1>Cadastro de Vacinas</h1>
+    <div>
+      <h2 className='text-xl font-bold mb-4 text-emerald-600'>Cadastro de Vacinas</h2>
       {success && <p style={{ color: "green" }}>Vacina cadastrada com sucesso!</p>}
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "10px" }}>
-          <label htmlFor="name">Nome da Vacina</label>
+      <form className='text-emerald-600' onSubmit={handleSubmit}>
+        <div className='flex flex-wrap mb-4'>
+          <label htmlFor="name" className='w-full'>Nome da Vacina</label>
           <input
             type="text"
             id="name"
@@ -60,22 +60,22 @@ const VaccineForm = ({ onSuccess, vaccine }: Props) => {
             value={formData.name}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "8px" }}
+            className='focus:outline-none border-b-2 border-emerald-200 placeholder:italic placeholder:text-emerald-600 placeholder:opacity-40'
           />
         </div>
-        <div style={{ marginBottom: "10px" }}>
-          <label htmlFor="batch">Lote</label>
+        <div className='flex flex-wrap mb-4'>
+          <label htmlFor="batch" className='w-full'>Lote</label>
           <input
             id="batch"
             name="batch"
             value={formData.batch}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "8px" }}
+            className='focus:outline-none border-b-2 border-emerald-200 placeholder:italic placeholder:text-emerald-600 placeholder:opacity-40'
           />
         </div>
-        <div style={{ marginBottom: "10px" }}>
-          <label htmlFor="expiration_date">Data de Validade</label>
+        <div className='flex flex-wrap mb-4'>
+          <label htmlFor="expiration_date" className='w-full'>Data de Validade</label>
           <input
             type="date"
             id="expiration_date"
@@ -83,10 +83,10 @@ const VaccineForm = ({ onSuccess, vaccine }: Props) => {
             value={formData.expiration_date}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "8px" }}
+            className='focus:outline-none border-b-2 border-emerald-200 placeholder:italic placeholder:text-emerald-600 placeholder:opacity-40'
           />
         </div>
-        <button type="submit" style={{ padding: "10px 20px", background: "blue", color: "white" }}>
+        <button type="submit" className='text-white font-semibold bg-emerald-600 py-2 px-4 rounded'>
           Cadastrar
         </button>
       </form>
