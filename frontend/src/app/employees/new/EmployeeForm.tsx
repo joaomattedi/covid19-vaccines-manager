@@ -6,6 +6,7 @@ import { Vaccine } from '@/app/vaccines/VaccineListPage';
 import { Employee } from '../EmployeeListPage';
 import { createEmployee, updateEmployee } from '@/services/employees.service';
 import Modal from '@/components/Modal';
+import { AxiosError } from 'axios';
 
 type Props = {
   onSuccess: () => void;
@@ -55,21 +56,21 @@ const EmployeeForm = ({ onSuccess, employee }: Props) => {
       if (!!employee?.id) {
         await updateEmployee(formData);
       } else {
-        console.log(formData);
-        
         await createEmployee(formData);
       }
       onSuccess();
     } catch (error: any) {
-      setError(error);
+      if (error instanceof AxiosError) {
+        setError(error.response?.data);
+      } else {
+        setError(error);
+      }
       setOpenModal(true)
       console.error('Erro ao criar funcionário. Verifique os dados e tente novamente.', error);
     }
   };
 
   function validateFormData(formData: Employee) {
-    console.log(!!formData.cpf);
-    
     if (!!formData.cpf === false || formData.cpf.length !== 11) {
       throw new Error('CPF inválido');
     }
@@ -183,7 +184,7 @@ const EmployeeForm = ({ onSuccess, employee }: Props) => {
         <button type="submit" className='text-white font-semibold bg-emerald-600 py-2 px-4 rounded'>Salvar</button>
       </form>
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <h1>Ocorreu um erro!</h1>
+        <h1 className='font-bold mb-2'>Ocorreu um erro!</h1>
         <p>{error?.message}</p>
       </Modal>
     </div>
