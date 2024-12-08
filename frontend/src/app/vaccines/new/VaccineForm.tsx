@@ -87,7 +87,7 @@ const VaccineForm = ({ onSuccess, vaccine }: Props) => {
           />
         </div>
         <button type="submit" className='text-white font-semibold bg-emerald-600 py-2 px-4 rounded'>
-          Cadastrar
+          Salvar
         </button>
       </form>
     </div>
