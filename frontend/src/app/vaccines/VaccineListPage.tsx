@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { deleteVaccine, getVaccines } from '@/services/vaccines.service';
 import Modal from '@/components/Modal';
 import VaccineForm from './new/VaccineForm';
-import { FaChevronCircleLeft, FaChevronCircleRight, FaEdit, FaPlus, FaTrashAlt } from 'react-icons/fa';
+import { FaChevronCircleLeft, FaChevronCircleRight, FaEdit, FaPlus, FaSearch, FaTrashAlt } from 'react-icons/fa';
 
 export type Vaccine = {
   id?: number;
@@ -30,12 +30,16 @@ const VaccineListPage = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedVaccine, setSelectedVaccine] = useState<Vaccine | null>(null);
+  const [filters, setFilters] = useState({
+    name: '',
+    batch: '',
+  });
 
   const fetchVaccines = async (page: number) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getVaccines(page);
+      const response = await getVaccines(page, filters);
       setVaccines(response.data);
       setCurrentPage(response.current_page);
       setLastPage(response.last_page);
@@ -81,13 +85,55 @@ const VaccineListPage = () => {
     setUpdateModalOpen(true);
   };
 
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
+  };
+  
+  const handleSearchClick = () => {
+    setCurrentPage(1);
+    fetchVaccines(1);
+  }
+
   if (error) return <p>{error}</p>;
 
   return (
     <div className='w-4/5 m-auto flex justify-between flex-wrap gap-10'>
-      <div className='flex justify-between items-center py-6 w-full border-b-2 border-emerald-600'>
-        <h1 className='text-emerald-600 font-semibold text-2xl'>Lista de Vacinas</h1>
+      <div className='flex flex-wrap justify-between items-center w-full border-b-2 mt-4 pb-2 border-emerald-600'>
+        <h1 className='text-emerald-600 font-semibold text-2xl w-full pb-2'>Lista de Vacinas</h1>
 
+        <div className='flex justify-start items-end py-2 rounded gap-2 text-emerald-600'>
+          <div className='flex flex-wrap items-center'>
+            <label className='w-full' htmlFor="name">Nome</label>
+            <input
+              type="text"
+              name="name"
+              id="name" 
+              placeholder='Busque por nome...'
+              value={filters.name}
+              onChange={handleFilterChange}
+              className='border-b-2 py-2 border-emerald-600 px-2'
+            />
+          </div>
+          <div className='flex flex-wrap'>
+            <label htmlFor="batch" className='w-full'>Lote</label>
+            <input
+              type="text"
+              name="batch"
+              id="batch" 
+              placeholder='Busque por lote...'
+              value={filters.batch}
+              onChange={handleFilterChange}
+              className='border-b-2 py-2 border-emerald-600 px-2'
+            />
+          </div>
+        </div>
+
+        <div className='cursor-pointer flex items-center gap-2 border-2 border-emerald-600 text-emerald-600 px-4 py-2 rounded' onClick={handleSearchClick}>
+          <FaSearch/> Buscar
+        </div>
         <button
           onClick={toggleModal}
           className='flex items-center gap-2 text-lg font-semibold text-white bg-emerald-600 rounded px-4 py-2'

@@ -2,9 +2,9 @@ import { PaginatedResponse } from "@/app/vaccines/VaccineListPage";
 import api from "./api";
 import { Vaccine } from "@/app/vaccines/VaccineListPage";
 
-export async function getVaccines(page: number) {
+export async function getVaccines(page: number, filters: any) {
   const { data } = await api.get<PaginatedResponse>('/vaccines', {
-    params: { page },
+    params: { page, ...filters },
   });
 
   return data;
