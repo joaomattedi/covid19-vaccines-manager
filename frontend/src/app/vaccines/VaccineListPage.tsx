@@ -84,13 +84,13 @@ const VaccineListPage = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className='w-4/5 m-auto flex justify-between flex-wrap h-4/5 gap-10'>
-      <div className='flex justify-between items-center py-6 w-full'>
-        <h1 className='text-emerald-500 font-semibold text-2xl'>Lista de Vacinas</h1>
+    <div className='w-4/5 m-auto flex justify-between flex-wrap gap-10'>
+      <div className='flex justify-between items-center py-6 w-full border-b-2 border-emerald-600'>
+        <h1 className='text-emerald-600 font-semibold text-2xl'>Lista de Vacinas</h1>
 
         <button
           onClick={toggleModal}
-          className='flex items-center gap-2 text-lg font-semibold text-emerald-500 hover:bg-emerald-500 hover:text-white hover:rounded px-4 py-2'
+          className='flex items-center gap-2 text-lg font-semibold text-white bg-emerald-600 rounded px-4 py-2'
         >
           <FaPlus /> Criar Nova Vacina
         </button>
