@@ -15,13 +15,13 @@ const HomePage = () => {
         <nav style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
           <button
             onClick={() => setActiveTab('funcionarios')}
-            className={`${ activeTab === 'funcionarios' ? 'bg-emerald-600 text-white' : 'bg-transparent text-emerald-600 border border-emerald-600 '} px-4 py-2 rounded`}
+            className={`${ activeTab === 'funcionarios' && 'border-b-2 border-emerald-600'} text-emerald-600 px-4 py-2`}
           >
             Funcionários
           </button>
           <button
             onClick={() => setActiveTab('vacinas')}
-            className={`${ activeTab === 'vacinas' ? 'bg-emerald-600 text-white' : 'bg-transparent text-emerald-600 border border-emerald-600 '} px-4 py-2 rounded`}
+            className={`${ activeTab === 'vacinas' && 'border-b-2 border-emerald-600'} text-emerald-600 px-4 py-2`}
           >
             Vacinas
           </button>
