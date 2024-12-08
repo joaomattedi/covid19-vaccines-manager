@@ -1,12 +1,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { deleteEmployee, getEmployees } from '@/services/employees.service';
-import { Vaccine } from '../vaccines/VaccineListPage';
+
 import Modal from '@/components/Modal';
 import EmployeeForm from './new/EmployeeForm';
-import { FaChevronCircleLeft, FaChevronCircleRight, FaEdit, FaPlus, FaTrashAlt } from 'react-icons/fa';
 import EmployeeInfo from '@/components/EmployeeInfo';
+import { FaChevronCircleLeft, FaChevronCircleRight, FaEdit, FaPlus, FaSearch, FaTrashAlt } from 'react-icons/fa';
+
+import { Vaccine } from '../vaccines/VaccineListPage';
+
+import { annonymousCpf } from '@/helpers/format';
+import { deleteEmployee, getEmployees } from '@/services/employees.service';
 
 export type Employee = {
   id?: number;
@@ -38,6 +42,10 @@ const EmployeeListPage = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [filters, setFilters] = useState({
+    cpf: '',
+    fullName: '',
+  });
   
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
@@ -45,7 +53,7 @@ const EmployeeListPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getEmployees(page)
+      const response = await getEmployees(page, filters)
       setEmployees(response.data);
       setCurrentPage(response.current_page);
       setLastPage(response.last_page);
@@ -90,12 +98,44 @@ const EmployeeListPage = () => {
     setUpdateModalOpen(true);
   };
 
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters({
+      ...filters,
+      [e.target.name]: e.target.value,
+    });
+    setCurrentPage(1);
+  };
+
+  const handleSearchClick = () => {
+    fetchEmployees(currentPage);
+  }
+
   if (error) return <p>{error}</p>;
 
   return (
     <div className='w-4/5 m-auto flex justify-between flex-wrap h-4/5 gap-10'>
       <div className='flex justify-between items-center py-6 w-full'>
         <h1 className='text-emerald-500 font-semibold text-2xl'>Lista de Funcionários</h1>
+
+        <div>
+        <input
+          type="text"
+          name="cpf"
+          id="cpf" 
+          placeholder='Busque por CPF...'
+          value={filters.cpf}
+          onChange={handleFilterChange}
+        />
+        <input
+          type="text"
+          name="fullName"
+          id="fullName" 
+          placeholder='Busque por nome...'
+          value={filters.fullName}
+          onChange={handleFilterChange}
+        />
+        <FaSearch onClick={handleSearchClick}/>
+        </div>
 
         <button
           onClick={toggleModal}
@@ -127,7 +167,7 @@ const EmployeeListPage = () => {
                 {employees.map((employee) => (
                   <tr key={employee.id} className='hover:bg-emerald-50'>
                     <td className='text-center'>{employee.id}</td>
-                    <td className='text-center'>{employee.cpf}</td>
+                    <td className='text-center pl-2'>{annonymousCpf(employee.cpf)}</td>
                     <td className='text-center'>{employee.full_name}</td>
                     <td className='text-center'>{new Date(employee.birth_date).toLocaleDateString()}</td>
                     <td className='text-center'>{employee.date_first_dose && new Date(employee.date_first_dose).toLocaleDateString()}</td>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ErrorInfo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '@/services/api';
 import { Vaccine } from '@/app/vaccines/VaccineListPage';
 import { Employee } from '../EmployeeListPage';

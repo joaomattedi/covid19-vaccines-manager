@@ -1,9 +1,10 @@
 import { Employee, PaginatedResponse } from "@/app/employees/EmployeeListPage";
 import api from "./api";
 
-export async function getEmployees(page: number) {
+export async function getEmployees(page: number, filters: any) {
   const { data } = await api.get<PaginatedResponse>('/employees', {
-    params: { page },
+    params: { page, ...filters },
+
   });
 
   return data;
