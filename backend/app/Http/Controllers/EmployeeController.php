@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class EmployeeController extends Controller
 {
@@ -22,8 +21,6 @@ class EmployeeController extends Controller
         if (!empty($filters['fullName'])) {
             $query->where('full_name', 'like', '%' . $filters['fullName'] . '%');
         }
-
-        Log::info($filters);
 
         $employees = $query->paginate($perPage);
         return response()->json($employees);
