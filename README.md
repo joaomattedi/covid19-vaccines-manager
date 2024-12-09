@@ -30,6 +30,8 @@ Before running the project, make sure you have the following installed:
 * [Node.js](https://nodejs.org/pt/download/package-manager) (v18 above): Required to run the frontend.
 * [Docker](https://www.docker.com): Required to run the containers for both frontend and backend.
 * [Docker Compose](https://docs.docker.com/compose/install/): Required to manage multi-container Docker applications.
+* [PHP (v8.0 or above)](https://www.php.net/downloads): Required to run the backend and to use Composer.
+* [Composer](https://getcomposer.org/download/): Required to install backend dependencies.
 
 ## How to Run the Project
 
@@ -43,6 +45,10 @@ git clone https://github.com/joaomattedi/covid19-vaccines-manager.git
 Go to the backend directory and set up the development environment:
 ```bash
 cd backend
+```
+Install the dependencies with the command below.
+```bash
+composer install
 ```
 
 Copy the .env.example file and rename it to .env.
